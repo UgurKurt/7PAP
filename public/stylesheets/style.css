@@ -3,8 +3,12 @@ body {
 }
 
 .content-container{
-  height: 800px;
   text-align: center;
+}
+
+.post-container{
+  text-align: left;
+  margin-left: 20%;
 }
 
 a {

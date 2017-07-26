@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 
 var schema = mongoose.Schema({
 	title:   String,
-	imgUrl: String
+	imgUrl: String,
+    publishDate: Number
 });
 
 var model = mongoose.model('Post',schema);

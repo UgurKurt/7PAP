@@ -6,7 +6,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
 var mongoose = require('mongoose');
+var flash = require('connect-flash');
+var session = require('express-session');
+var passport = require('passport');
+
+
 mongoose.connect('mongodb://localhost/7pap');
+require('./config/passport.js');
+
 
 var db = mongoose.connection;
 db.on('error',function(err){
@@ -31,6 +38,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname + '/bower_components'));
+app.use(session({secret:'Iki kisinin bilmedigi', resave: false, saveUninitialized:false}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.use(function(req, res, next){
+  res.locals.logged = req.isAuthenticated();
+  res.locals.user = req.user;
+  next();
+});
 
 app.use('/', index);
 app.use('/users', users);
