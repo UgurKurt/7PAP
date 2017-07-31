@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var User = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -14,7 +15,7 @@ router.get('/signup', function(req, res, next){
 });
 
 router.post('/signup', passport.authenticate('local.signup',{
-  successRedirect:'/users/profile',
+  successRedirect:'/users/profile/me',
   failureRedirect: '/users/signup',
   failureFlash: true
 }));
@@ -25,18 +26,44 @@ router.get('/signin', function(req, res, next){
 });
 
 router.post('/signin', passport.authenticate('local.signin',{
-  successRedirect:'/users/profile',
+  successRedirect:'/users/profile/me',
   failureRedirect: '/users/signin',
   failureFlash: true
 }));
 
-router.get('/profile', function(req ,res ,next){
-  res.render('user/profile',{username: req.user.username});
+router.get('/profile/:username', isLoggedIn, function(req ,res ,next){
+
+  if(req.params.username == 'me'){
+    res.render('user/profile',{user: req.user});
+    return;   
+  }
+
+  User.findOne({username:req.params.username},function(err, data){
+    if(err){
+      res.render('error',{message: 'Whoops,somethings went wrong'});
+      return;
+    }
+
+    if(data == null){
+      res.render('error',{message: 'There is no such user!'});
+      return;
+    }
+
+    res.render('user/profile',{user: data});
+  });
 });
 
 router.get('/logout', function(req, res, next){
   req.logOut();
   res.redirect('/');
-})
+});
+
+function isLoggedIn(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  }
+
+  res.redirect('/');
+}
 
 module.exports = router;

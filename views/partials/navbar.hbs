@@ -38,11 +38,12 @@
       
       <ul class="nav navbar-nav navbar-right">
         {{#if logged}}
+          <li><a href="#">Upload Meme</a></li>
           <li><a href="#"> {{user.username}} </a></li>
           <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage Account<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/users/profile">My Profile</a></li>
+            <li><a href="/users/profile/me">My Profile</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="/users/logout">Log out</a></li>
           </ul>
